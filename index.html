@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Paquetes — LKREVIEWS (con formulario)</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    /* Estilos del modal y formulario (agregar a estilos.css si prefieres) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+    .modal {
+      width: 100%;
+      max-width: 760px;
+      background: linear-gradient(180deg,#0f1724,#071028);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 18px 40px rgba(2,6,23,0.6);
+      border: 1px solid rgba(255,255,255,0.04);
+      color: var(--white);
+      transform: translateY(10px);
+      transition: transform .18s ease, opacity .18s ease;
+    }
+    .modal.show { display: block; }
+    .modal-header{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+    .modal-title{ font-weight:900; font-size:18px; margin:0; }
+    .modal-close{ background:transparent; border:0; color:var(--muted); font-weight:800; cursor:pointer; padding:6px 8px; border-radius:8px; }
+    .modal-grid{ display:grid; grid-template-columns:1fr 320px; gap:18px; }
+    @media (max-width:880px){ .modal-grid{ grid-template-columns:1fr; } }
+
+    .form-field{ margin-bottom:12px; }
+    label{ display:block; color:var(--muted); font-weight:700; margin-bottom:6px; font-size:13px; }
+    select,input[type="text"],input[type="email"],textarea{
+      width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02); color:var(--white); font-size:14px;
+    }
+    textarea{ min-height:96px; resize:vertical; }
+    .helper{ font-size:12px; color:var(--muted); margin-top:6px; }
+
+    .aside-summary{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); }
+    .summary-row{ display:flex; justify-content:space-between; margin:8px 0; color:var(--muted); }
+    .summary-row strong{ color:var(--white); }
+
+    .modal-actions{ display:flex; gap:10px; margin-top:14px; }
+    .btn{ padding:10px 12px; border-radius:10px; font-weight:800; cursor:pointer; border:0; }
+    .btn-primary{ background:linear-gradient(90deg,#06a6f0,#4753ff); color:#001022; flex:1; }
+    .btn-ghost{ background:transparent; color:var(--white); border:1px solid rgba(255,255,255,0.06); }
+
+    /* pequeño estilo para errores */
+    .error{ color:#ff6b6b; font-size:13px; margin-top:6px; display:none; }
+    .show-error{ display:block; }
+
+    /* enlace WhatsApp */
+    .whatsapp-line { margin-top:8px; font-size:13px; color:var(--muted); }
+    .whatsapp-line a{ color:#06a6f0; text-decoration:none; font-weight:800; }
+
+    /* animación cuando aparece */
+    .modal-backdrop.show { display:flex; }
+  </style>
+</head>
+<body>
+  <!-- Cabecera simple -->
+  <header class="site-header" style="padding:18px 28px;">
+    <div class="brand">
+      <a href="./index.html" class="logo" style="color:var(--white);text-decoration:none;font-weight:900;font-size:18px;">LKREVIEWS</a>
+      <div class="tag" style="color:var(--muted);font-size:13px;">Reputación online profesional</div>
+    </div>
+
+    <nav class="main-nav" style="display:flex;gap:12px;">
+      <a href="./index.html" class="nav-link" data-page="paquetes" style="color:var(--muted);text-decoration:none;">Paquetes</a>
+      <a href="./por-que-contratar.html" class="nav-link" data-page="por-que" style="color:var(--muted);text-decoration:none;">Por qué contratar</a>
+    </nav>
+  </header>
+
+  <!-- Contenido de ejemplo (puedes usar tus tarjetas existentes) -->
+  <main class="wrap" style="padding:28px;">
+    <h1 style="margin-top:0;">Paquetes disponibles</h1>
+
+    <section class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;">
+      <!-- Ejemplo de tarjeta: mantén tus tarjetas reales y usa la clase .btn-config en los botones -->
+      <article class="card" style="display:flex;gap:12px;padding:16px;border-radius:12px;">
+        <div class="cube" style="flex:0 0 160px;">
+          <picture>
+            <img src="paquete-basic.jpg" alt="Basic Pack" style="width:160px;height:120px;object-fit:cover;border-radius:8px;">
+          </picture>
+        </div>
+
+        <div class="info" style="flex:1;">
+          <h2 class="name" style="margin:0 0 8px 0;">Basic Pack</h2>
+          <p class="desc" style="margin:0 0 10px 0;color:var(--muted)">10 reseñas a 4€ cada una.</p>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-primary btn-config" data-package="Basic Pack" data-count="10" data-price="4">Configurar detalles</button>
+            <button class="btn btn-ghost">Ver paquete</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Repite para otros paquetes; solo asegúrate de usar .btn-config con atributos -->
+      <article class="card" style="display:flex;gap:12px;padding:16px;border-radius:12px;">
+        <div class="cube" style="flex:0 0 160px;">
+          <picture><img src="paquete-basicplus.jpg" alt="Basic+ Pack" style="width:160px;height:120px;object-fit:cover;border-radius:8px;"></picture>
+        </div>
+        <div class="info" style="flex:1;">
+          <h2 class="name" style="margin:0 0 8px 0;">Basic+ Pack</h2>
+          <p class="desc" style="margin:0 0 10px 0;color:var(--muted)">25 reseñas a 3.80€ cada una.</p>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-primary btn-config" data-package="Basic+ Pack" data-count="25" data-price="3.8">Configurar detalles</button>
+            <button class="btn btn-ghost">Ver paquete</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- añade más tarjetas según necesites; asegúrate que el botón tenga .btn-config -->
+    </section>
+  </main>
+
+  <!-- Modal: formulario de configuración -->
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal" role="document" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Detalles para —</h3>
+        <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
+      </div>
+
+      <div class="modal-grid">
+        <!-- Formulario principal -->
+        <form id="detailsForm" novalidate>
+          <input type="hidden" name="packageName" id="packageName">
+          <div class="form-field">
+            <label for="currentReviews">¿Cuántas reseñas tiene tu local actualmente?</label>
+            <select id="currentReviews" name="currentReviews" required>
+              <option value="">Selecciona</option>
+              <option value="0-9">Menos de 10</option>
+              <option value="10-49">10-49</option>
+              <option value="50-99">50-99</option>
+              <option value="100-199">100-199</option>
+              <option value="200+">200 o más</option>
+            </select>
+            <div class="error" id="errCurrentReviews">Selecciona una opción.</div>
+          </div>
+
+          <div class="form-field">
+            <label for="dailyFreq">Frecuencia diaria:</label>
+            <select id="dailyFreq" name="dailyFreq" required>
+              <option value="">Selecciona</option>
+              <option value="2">2 reseñas al día</option>
+              <option value="3">3 reseñas al día</option>
+              <option value="4">4 reseñas al día</option>
+              <option value="5">5 reseñas al día</option>
+              <option value="7">Hasta 7 reseñas al día</option>
+            </select>
+            <div class="error" id="errDailyFreq">Selecciona la frecuencia.</div>
+          </div>
+
+          <div class="form-field">
+            <label for="keywords">Palabras clave o ideas de texto:</label>
+            <textarea id="keywords" name="keywords" placeholder="Puedes escribir tus textos o ideas..." ></textarea>
+          </div>
+
+          <div class="form-field">
+            <label for="businessLink">Enlace del local:</label>
+            <input type="text" id="businessLink" name="businessLink" placeholder="https://..." />
+          </div>
+
+          <div class="form-field">
+            <label for="emailInvoice">Correo para enviar la factura:</label>
+            <input type="email" id="emailInvoice" name="emailInvoice" placeholder="tu@email.com" required />
+            <div class="error" id="errEmail">Introduce un correo válido.</div>
+          </div>
+
+          <div class="form-field whatsapp-line">
+            ¿Dudas? Escríbenos por WhatsApp <a href="https://wa.me/34123456789" target="_blank" rel="noopener">aquí</a>.
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" id="cancelBtn">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">Enviar y pagar</button>
+          </div>
+        </form>
+
+        <!-- Aside resumen -->
+        <aside class="aside-summary" aria-hidden="false">
+          <div style="text-align:center;margin-bottom:8px;">
+            <strong id="asidePackage">Paquete</strong>
+            <div style="color:var(--muted);font-size:13px;" id="asideSubtitle">Detalles</div>
+          </div>
+
+          <div class="summary-row"><span>Reseñas</span><strong id="asideCount">—</strong></div>
+          <div class="summary-row"><span>Precio por unidad</span><strong id="asidePrice">—</strong></div>
+          <div class="summary-row"><span>Total estimado</span><strong id="asideTotal">—</strong></div>
+
+          <div style="border-top:1px solid rgba(255,255,255,0.03); margin-top:10px; padding-top:10px;">
+            <div style="font-size:13px;color:var(--muted);">Resumen antes del pago</div>
+            <div style="margin-top:8px;">
+              <button class="btn btn-primary" id="asideConfirm">Continuar al pago</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje de confirmación simulado -->
+  <div id="toast" style="position:fixed;right:20px;bottom:20px;background:#0b1220;color:#fff;padding:12px 16px;border-radius:10px;box-shadow:0 10px 30px rgba(2,6,23,0.6);display:none;z-index:10000;">Pedido enviado (simulado)</div>
+
+  <script>
+    // Funcionalidad para abrir/cerrar modal y rellenar datos según el paquete
+    (function(){
+      const backdrop = document.getElementById('modalBackdrop');
+      const modalTitle = document.getElementById('modalTitle');
+      const packageNameInput = document.getElementById('packageName');
+      const asidePackage = document.getElementById('asidePackage');
+      const asideSubtitle = document.getElementById('asideSubtitle');
+      const asideCount = document.getElementById('asideCount');
+      const asidePrice = document.getElementById('asidePrice');
+      const asideTotal = document.getElementById('asideTotal');
+      const form = document.getElementById('detailsForm');
+      const toast = document.getElementById('toast');
+
+      // Abre modal y rellena resumen
+      document.querySelectorAll('.btn-config').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const pkg = btn.dataset.package || 'Paquete';
+          const count = Number(btn.dataset.count || 0);
+          const price = Number(btn.dataset.price || 0);
+          packageNameInput.value = pkg;
+          modalTitle.textContent = 'Detalles para ' + pkg;
+          asidePackage.textContent = pkg;
+          asideSubtitle.textContent = `${count} reseñas · ${price}€ / unidad`;
+          asideCount.textContent = count > 0 ? count + ' reseñas' : '—';
+          asidePrice.textContent = price ? price + '€' : '—';
+          asideTotal.textContent = (count && price) ? ( (count * price).toFixed(2) + '€' ) : '—';
+          // reset formulario
+          form.reset();
+          hideErrors();
+          backdrop.classList.add('show');
+          backdrop.setAttribute('aria-hidden', 'false');
+        });
+      });
+
+      // Cerrar modal
+      const closeModal = () => {
+        backdrop.classList.remove('show');
+        backdrop.setAttribute('aria-hidden', 'true');
+      };
+      document.getElementById('modalClose').addEventListener('click', closeModal);
+      document.getElementById('cancelBtn').addEventListener('click', closeModal);
+      backdrop.addEventListener('click', (e) => {
+        if(e.target === backdrop) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape') closeModal();
+      });
+
+      // Validación simple
+      const showError = (id, show) => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.classList.toggle('show-error', show);
+      };
+      const hideErrors = () => {
+        showError('errCurrentReviews', false);
+        showError('errDailyFreq', false);
+        showError('errEmail', false);
+      };
+
+      form.addEventListener('submit', (evt) => {
+        evt.preventDefault();
+        hideErrors();
+        let ok = true;
+        const currentReviews = document.getElementById('currentReviews').value;
+        const dailyFreq = document.getElementById('dailyFreq').value;
+        const email = document.getElementById('emailInvoice').value.trim();
+
+        if(!currentReviews){ showError('errCurrentReviews', true); ok = false; }
+        if(!dailyFreq){ showError('errDailyFreq', true); ok = false; }
+        if(!email || !/^\S+@\S+\.\S+$/.test(email)){ showError('errEmail', true); ok = false; }
+
+        if(!ok) return;
+
+        // Simula envío / pago: muestra toast y cierra modal
+        toast.textContent = 'Pedido recibido: ' + packageNameInput.value + '. Redirigiendo a pago (simulado)...';
+        toast.style.display = 'block';
+        setTimeout(()=> { toast.style.display = 'none'; }, 4200);
+
+        // Aquí puedes integrar la lógica real: redirigir a pasarela, enviar a servidor, etc.
+        closeModal();
+      });
+
+      // Botón del aside "Continuar al pago" simplemente dispara submit
+      document.getElementById('asideConfirm').addEventListener('click', function(){
+        form.requestSubmit();
+      });
+
+      // Accesibilidad: focus trap básico (manejable según necesidades)
+      backdrop.addEventListener('keydown', function(e){
+        if(e.key === 'Tab'){
+          const focusable = backdrop.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+          const first = focusable[0];
+          const last = focusable[focusable.length-1];
+          if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+          else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>
+<!-- Standard Pack (pega dentro de tu sección .grid) -->
+<article class="card">
+  <div class="cube">
+    <picture>
+      <source srcset="paquete-standard" type="jpg/webp">
+      <img src="paquete-standard.jpg" alt="Standard Pack — 50 reseñas, Total 180€" loading="lazy" width="160" height="120">
+    </picture>
+  </div>
+
+  <div class="info">
+    <h3 class="name">Standard Pack</h3>
+    <p class="desc">50 reseñas a 3.60€ cada una.</p>
+
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button class="btn btn-primary btn-config" data-package="Standard Pack" data-count="50" data-price="3.6">
+        Configurar detalles
+      </button>
+      <button class="btn btn-ghost">Ver paquete</button>
+    </div>
+  </div>
+</article>
+<!-- Premium Pack (pega dentro de tu sección .grid) -->
+<article class="card">
+  <div class="cube">
+    <picture>
+      <source srcset="paquete-premium" type="jpg/webp">
+      <img src="paquete-premium.jpg" alt="Premium Pack — 100 reseñas, Total 300€" loading="lazy" width="160" height="120">
+    </picture>
+  </div>
+
+  <div class="info">
+    <h3 class="name">Premium Pack</h3>
+    <p class="desc">100 reseñas a 3.00€ cada una.</p>
+
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button class="btn btn-primary btn-config" data-package="Premium Pack" data-count="100" data-price="3">
+        Configurar detalles
+      </button>
+      <button class="btn btn-ghost">Ver paquete</button>
+    </div>
+  </div>
+</article>
